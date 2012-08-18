@@ -49,6 +49,5 @@ public class EvaluatorTest extends TestCase {
 		assertEquals(Integer.valueOf(8), e.eval(world, nestedSum));
 		assertEquals(Integer.valueOf(8), e.eval(world, nestedSum2));
 	}
-	
 
 }

@@ -159,12 +159,21 @@ public class Evaluator {
 		Lambda l = (Lambda) args.get(0);
 		LambdaEnvironment env = new LambdaEnvironment(parent);
 		
-		if (args.size() != l.parameterNames.length + 1) {
-			throw new RuntimeException("wrong number of parameters");
-		}
+		System.out.printf("Funcalling with %s\n", args);
 		
 		for (int i = 0; i < l.parameterNames.length; i ++) {
-			env.setSymbolValueInEnvironment(l.parameterNames[i], args.get(i + 1));
+		    Symbol pn = l.parameterNames[i];
+		    Object value;
+		    if (pn == world.intern("&rest")) {
+		        // var args!
+		        i ++;
+		        pn = l.parameterNames[i];
+		        value = Cons.fromList(args, i);
+		        System.out.printf("final vararg is %s (%s : %d)\n", value, args, i);
+		    } else {
+		        value = args.get(i + 1);
+		    }
+			env.setSymbolValueInEnvironment(pn, value);
 		}
 		
 		// how do you actually evaluate the lambda now? just evaluate

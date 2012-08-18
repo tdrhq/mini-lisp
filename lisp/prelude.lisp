@@ -1,1 +1,1 @@
-(+ 1 2)
+(set (quote foo) 2)

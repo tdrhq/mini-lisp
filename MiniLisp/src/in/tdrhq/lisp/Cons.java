@@ -54,6 +54,10 @@ public class Cons {
 		return a.equals(b);
 	}
 	
+	public static Cons fromList(List<Object> values, int start) {
+	    return fromList(values.subList(start, values.size()));
+	}
+	
 	public static Cons fromList(List<Object> values) {
 		if (values.size() == 0) {
 			return null;

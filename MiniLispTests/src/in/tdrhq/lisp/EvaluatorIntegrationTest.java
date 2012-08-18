@@ -141,4 +141,11 @@ public class EvaluatorIntegrationTest extends TestCase {
 		eval("(mysetq yy 10)");
 		assertEval(10, "(identity yy)");
 	}
+	   
+    @Test
+    public void testVarArgs() {
+        eval("(set (quote foo) (lambda1 (x &rest args) (identity args)))");
+        assertEval("(quote (2 1 0)", "(funccall foo 3 2 1 0)"); 
+    }
+	
 }

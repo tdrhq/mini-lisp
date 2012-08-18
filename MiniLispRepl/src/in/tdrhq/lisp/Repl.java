@@ -15,7 +15,8 @@ public class Repl {
 		InputStreamReader converter = new InputStreamReader(System.in);
 		BufferedReader in = new BufferedReader(converter);
 		  
-
+		// always load the prelude
+		world.evalText("(load \"../lisp/prelude.lisp\")");
 		while (true) {
 			String s;
 			try {
