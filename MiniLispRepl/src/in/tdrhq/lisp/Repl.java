@@ -23,15 +23,12 @@ public class Repl {
 			} catch (IOException e1) {
 				throw new RuntimeException(e1);
 			}
-			
-			Lexer lexer = new Lexer(s);
-			Parser parser = new Parser(world, lexer);
-			Object res = null;
-			for (Object o : parser.parse()) {
-				System.out.printf("parsed as %s\n", o);
-				res = e.eval(world, o);
+
+			try {
+			    System.out.printf("=> %s\n", world.evalText(s));
+			} catch (Exception ee) {
+			    ee.printStackTrace();
 			}
-			System.out.printf("=> %s\n", res);
 		}
 	}
 

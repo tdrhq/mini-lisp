@@ -1,7 +1,12 @@
 package in.tdrhq.lisp;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
+import javax.naming.spi.DirectoryManager;
 
 public class NativeLibrary {
 	World world;
@@ -32,8 +37,9 @@ public class NativeLibrary {
 			
 			// is name a varargs function?
 			Class<?> [] types = m.getParameterTypes();
-			System.out.printf("types are %s", types);
-			if (types[types.length - 1] == Object[].class) {
+
+
+			if (types.length > 0 && types[types.length - 1] == Object[].class) {
 				// this is var args!
 				Object[] newargs = new Object[types.length];
 				
@@ -82,5 +88,31 @@ public class NativeLibrary {
 	public Object setmacrofun(Symbol a, Lambda b) {
 		return a.macroDefinition = b;
 	}
-
+	
+	public Object load(String filename) {
+	    return world.evalText(readFileAsString(filename));
+	}
+	
+	public String pwd() {
+	    return System.getProperty("user.dir");
+	}
+	private static String readFileAsString(String filePath) {
+	    try {
+	        StringBuffer fileData = new StringBuffer(1000);
+	        BufferedReader reader = new BufferedReader(
+	                new FileReader(filePath));
+	        char[] buf = new char[1024];
+	        int numRead=0;
+	        while((numRead=reader.read(buf)) != -1){
+	            String readData = String.valueOf(buf, 0, numRead);
+	            fileData.append(readData);
+	            buf = new char[1024];
+	        }
+	        reader.close();
+	        return fileData.toString();
+	    } catch (IOException e) {
+	        throw new RuntimeException(e);
+	    }
+	}
+	
 }

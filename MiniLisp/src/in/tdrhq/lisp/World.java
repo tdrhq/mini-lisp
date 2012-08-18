@@ -64,4 +64,15 @@ public class World implements Environment {
 	public Environment getParent() {
 		return null;
 	}
+	
+	public Object evalText(String s) {
+        Lexer lexer = new Lexer(s);
+        Parser parser = new Parser(this, lexer);
+        Object res = null;
+        for (Object o : parser.parse()) {
+            System.out.printf("parsed as %s\n", o);
+            res = new Evaluator(this).eval(this, o);
+        }    
+        return res;
+	}
 }
