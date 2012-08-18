@@ -68,10 +68,16 @@ public class Evaluator {
 		if (function == world.intern("lambda1")) { 
 			Lambda lambda;
 			lambda = new Lambda();
-
-			lambda.ast = (List<Object>) code.get(2); // only single query allowed!
-
-			List<Object> argList = (List<Object>) code.get(1);
+			Object ast = code.get(2);
+			if (ast instanceof Cons) {
+			    ast = ((Cons) ast).toList();
+			}
+			lambda.ast = (List<Object>) ast; // only single query allowed!
+			Object argList_ = code.get(1);
+			if (argList_ instanceof Cons) {
+			    argList_ = ((Cons) argList_).toList();
+			}
+			List<Object> argList = (List<Object>) argList_;
 			Symbol[] args1 = new Symbol[argList.size()];
 			for (int i = 0; i < args1.length; i++) {
 				args1[i] = (Symbol) argList.get(i);
@@ -98,6 +104,7 @@ public class Evaluator {
 			Object result = funccall(env, newargs);
 			
 			// and now that we have the code ready... 
+			System.out.printf("Macroexpansion: %s\n", result);
 			return eval(env, result);
 		}
 		
@@ -125,6 +132,11 @@ public class Evaluator {
 			return args.get(args.size() - 1);
 		}
 		
+		if (function == world.intern("eval")) {
+		    
+		}
+		
+
 		if (function == world.intern("funccall")) {
 			return funccall(env, args);
 		}

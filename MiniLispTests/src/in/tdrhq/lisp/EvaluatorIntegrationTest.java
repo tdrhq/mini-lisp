@@ -154,5 +154,12 @@ public class EvaluatorIntegrationTest extends TestCase {
         assertEval(eval("(quote (foo 3))"),
                 "(backquote (foo (comma 3)))");
     }
+    
+    @Test
+    public void testConsFun() {
+        assertEval(eval("(list 1 2 3)"),
+                "(cons 1 (list 2 3))");
+
+    }
 	
 }

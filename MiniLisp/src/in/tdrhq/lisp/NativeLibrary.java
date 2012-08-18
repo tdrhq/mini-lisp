@@ -115,4 +115,15 @@ public class NativeLibrary {
 	    }
 	}
 	
+	public Cons cons(Object a, Object b) {
+	    Cons ret = new Cons();
+	    ret.car = a;
+	    ret.cdr = b;
+	    return ret;
+	}
+	
+	public Object message(String s) {
+	    System.out.println(s);
+	    return null;
+	}
 }
