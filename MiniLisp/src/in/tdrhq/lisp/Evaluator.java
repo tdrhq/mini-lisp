@@ -59,6 +59,10 @@ public class Evaluator {
 			Object sym = code.get(1);
 			return quote(sym);
 		}
+		
+		if (function == world.intern("backquote")) {
+		    return uncommafy(env, quote(code.get(1)));
+		}
 				
 		// and then here comes lambda
 		if (function == world.intern("lambda1")) { 
@@ -206,5 +210,38 @@ public class Evaluator {
 		res.car = quote(l.get(start));
 		res.cdr = quoteList(l, start + 1);
 		return res;
+	}
+	
+	public Object uncommafy(Environment env, Object o) {
+	    if (o instanceof Cons) {
+	        Cons a = (Cons) o;
+	        if (a.car == world.intern("comma")) {
+	           return eval(env, ((Cons) a.cdr).car);
+	        } else {
+	            return uncommafy_inner(env, a);
+	        }
+	    } else {
+	        return o;
+	    }
+	}
+	
+	public Object uncommafy_inner(Environment env, Object o) {
+        if (o instanceof Cons) {
+            Cons a = (Cons) o;
+            
+            Cons ret = new Cons();
+            
+            if (a.car instanceof Cons) {
+                ret.car = uncommafy(env, a.car);
+                ret.cdr = uncommafy_inner(env, a.cdr);
+                return ret;
+            } else {
+                ret.car = uncommafy_inner(env, a.car);
+                ret.cdr = uncommafy_inner(env, a.cdr);
+            }
+            return ret;
+        } else {
+            return o;
+        }
 	}
 }
