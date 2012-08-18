@@ -68,8 +68,8 @@ public class EvaluatorIntegrationTest extends TestCase {
 	
 	@Test
 	public void testIf() {
-		assertEval(5, "(if 3 5)");
-		assertEval(null, "(if nil 5)");
+		assertEval(5, "(if1 3 5)");
+		assertEval(null, "(if1 nil 5)");
 	}
 	
 	@Test

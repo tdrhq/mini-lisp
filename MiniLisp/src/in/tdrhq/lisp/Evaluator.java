@@ -44,7 +44,7 @@ public class Evaluator {
 
 		Symbol function = (Symbol) code.get(0);
 		
-		if (function == world.intern("if")) {
+		if (function == world.intern("if1")) {
 			// this is the only case that doesn't evaluate
 			// bot sides
 			Object res1 = eval(env, code.get(1));
@@ -141,6 +141,10 @@ public class Evaluator {
 			return funccall(env, args);
 		}
 		
+		if (function == world.intern("apply")) {
+		    return apply(env, (Lambda) args.get(0), (Cons) args.get(1));
+		}
+		
 		if (function == world.intern("set")) {
 			env.setSymbolValue((Symbol) args.get(0), args.get(1));
 			return args.get(1);
@@ -169,6 +173,13 @@ public class Evaluator {
 			result += (Integer) a;
 		}
 		return (Integer) result;
+	}
+	
+	public Object apply(Environment parent, Lambda lambda, Cons args) {
+	    List<Object> tmp = new ArrayList<Object>();
+	    tmp.add(lambda);
+	    tmp.addAll(args.toList());
+	    return funccall(parent, tmp);
 	}
 	
 	public Object funccall(Environment parent, List<Object> args) {
