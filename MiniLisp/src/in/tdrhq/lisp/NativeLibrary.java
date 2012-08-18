@@ -126,4 +126,21 @@ public class NativeLibrary {
 	    System.out.println(s);
 	    return null;
 	}
+	
+	public Object car(Cons a) {
+	    return a.car;
+	}
+	
+	public Object cdr(Cons a) {
+	    return a.cdr;
+	}
+	
+	public Integer length(Object a) {
+	    if (a instanceof Cons) {
+	        return ((Cons) a).toList().size();
+	    } else if (a instanceof String) {
+	        return ((String) a).length();
+	    }
+	    throw new RuntimeException("unexpected object to length");
+	}
 }
