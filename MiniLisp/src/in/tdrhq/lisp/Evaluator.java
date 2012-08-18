@@ -224,11 +224,18 @@ public class Evaluator {
 		return res;
 	}
 	
+	class CommaAt {
+	    Cons cons;
+	}
 	public Object uncommafy(Environment env, Object o) {
 	    if (o instanceof Cons) {
 	        Cons a = (Cons) o;
 	        if (a.car == world.intern("comma")) {
 	           return eval(env, ((Cons) a.cdr).car);
+	        } else if (a.car == world.intern("comma-at")) {
+	            CommaAt ret = new CommaAt();
+	            ret.cons = (Cons) eval(env, ((Cons) a.cdr).car);
+	            return ret;
 	        } else {
 	            return uncommafy_inner(env, a);
 	        }
@@ -244,8 +251,21 @@ public class Evaluator {
             Cons ret = new Cons();
             
             if (a.car instanceof Cons) {
-                ret.car = uncommafy(env, a.car);
-                ret.cdr = uncommafy_inner(env, a.cdr);
+                Object inner = uncommafy(env, a.car);
+                
+                if (inner instanceof CommaAt) {
+                    ret = ((CommaAt) inner).cons;
+                    Cons last = ret;
+                    while (last.cdr != null) {
+                        last = (Cons) last.cdr;
+                    }
+                    
+                    last.cdr = uncommafy_inner(env, a.cdr);
+                    return ret;
+                } else {
+                    ret.car = uncommafy(env, a.car);
+                    ret.cdr = uncommafy_inner(env, a.cdr);
+                }
                 return ret;
             } else {
                 ret.car = uncommafy_inner(env, a.car);

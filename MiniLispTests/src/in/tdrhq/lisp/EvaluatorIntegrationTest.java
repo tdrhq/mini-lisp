@@ -161,5 +161,11 @@ public class EvaluatorIntegrationTest extends TestCase {
                 "(cons 1 (list 2 3))");
 
     }
+    
+    @Test
+    public void testBackquoteWithCommaAt() {
+        assertEval(eval("(quote (foo 2 3))"),
+                    "(backquote (foo (comma-at (list 2 3))))");
+    }
 	
 }
