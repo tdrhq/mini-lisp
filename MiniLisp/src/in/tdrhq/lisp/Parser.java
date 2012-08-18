@@ -7,7 +7,10 @@ import java.util.List;
 
 public class Parser {
 	Lexer lexer;
-	public Parser(Lexer lexer) {
+	World world;
+	
+	public Parser(World world, Lexer lexer) {
+		this.world = world;
 		this.lexer = lexer;
 	}
 	
@@ -56,7 +59,18 @@ public class Parser {
 				continue;
 			}
 			
-			ast.add(next);
+			// type of token:
+			if (next instanceof SymbolToken) {
+				ast.add(world.intern((String) ((SymbolToken) next).value));
+			} else if (next instanceof StringToken) {
+				ast.add(((StringToken) next).value);
+			} else if (next instanceof IntToken) {
+				ast.add(((IntToken) next).value);
+			} else if (next instanceof NilToken) {
+				ast.add(null);
+			} else {
+				throw new RuntimeException("unexpected token");
+			}
 		}
 	}
 }

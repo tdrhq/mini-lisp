@@ -14,15 +14,18 @@ import static in.tdrhq.lisp.TokenHelpers.*;
 public class EvaluatorTest extends TestCase {
 	World world;
 	Evaluator e;
-	List simpleSum = l(sym("+"), i(2), i(5));
-	List nestedSum = l(sym("+"), simpleSum, i(1));
-	List nestedSum2 = l(sym("+"), i(1), simpleSum);
+	List simpleSum;
+	List nestedSum;
+	List nestedSum2;
 	@Before
 	protected void setUp() throws Exception {
 		super.setUp();
 		
 		world = new World();
 		e = new Evaluator(world);
+		simpleSum = l(world.intern("+"), 2, 5);;
+		nestedSum = l(world.intern("+"), simpleSum, 1);
+		nestedSum2 = l(world.intern("+"), 1, simpleSum);
 	}
 
 	@After
@@ -38,7 +41,7 @@ public class EvaluatorTest extends TestCase {
 		assertEquals(Integer.valueOf(7),
 				e.eval(world, simpleSum));
 		assertEquals(Integer.valueOf(7),
-				e.eval(world, l(sym("+"), i(1), i(1), i(5))));
+				e.eval(world, l(world.intern("+"), 1, 1, 5)));
 	}
 	
 	@Test

@@ -35,7 +35,7 @@ public class Lexer {
 		
 		@Override
 		public String toString() {
-			return this.getClass().toString() + "<" + String.valueOf(value) + ">";
+			return this.getClass().toString().substring("in.tdrhq.lisp.Lexer.Lexer$".length()) + "<" + String.valueOf(value) + ">";
 		}
 	}
 	

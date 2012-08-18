@@ -10,6 +10,8 @@ import junit.framework.TestCase;
 import static in.tdrhq.lisp.Lexer.*;
 
 public class ParserTest extends TestCase {
+	World world = new World();
+	
 	public static List<Object> list(Object... objects) {
 		ArrayList<Object> ret = new ArrayList<Object> ();
 		for (Object o : objects) {
@@ -18,12 +20,12 @@ public class ParserTest extends TestCase {
 		return ret;
 	}
 	
-	public static List<Object> compile(String code) {
-		return new Parser(new Lexer(code)).parse(); 
+	public List<Object> compile(String code) {
+		return new Parser(world, new Lexer(code)).parse(); 
 	}
 	
-	public static Token sym(String s) {
-		return new SymbolToken(s);
+	public Object sym(String s) {
+		return world.intern(s);
 	}
 	@Test
 	public void testSimpleParsing() {

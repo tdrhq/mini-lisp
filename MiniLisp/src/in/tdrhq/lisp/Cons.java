@@ -21,6 +21,10 @@ public class Cons {
 		return fromList(new ArrayList<Object>(Arrays.asList(objects)));
 	}
 	
+	public String toString() {
+		return toList().toString();
+	}
+	
 	public List<Object> toList() {
 		List<Object> o = new ArrayList<Object>();
 		

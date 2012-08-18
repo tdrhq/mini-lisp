@@ -24,7 +24,7 @@ public class EvaluatorIntegrationTest extends TestCase {
 
 	public Object eval(String str) {
 		Lexer l = new Lexer(str);
-		Parser p = new Parser(l);
+		Parser p = new Parser(world, l);
 		
 		List<Object> ast = p.parse();
 		System.out.printf("AST: %s\n", ast);
@@ -75,6 +75,8 @@ public class EvaluatorIntegrationTest extends TestCase {
 	@Test
 	public void testSettingGlobalValues() {
 		assertEval(5, "(set (quote foo) 5)");
+		assertEquals(5, world.getSymbolValue("foo"));
+		assertEval(5, "(identity 5)");
 		assertEval(5, "(identity foo)");
 		assertEval(6, "(set (quote bar) 6)");
 		assertEval(11,"(+ foo bar)");
@@ -88,6 +90,7 @@ public class EvaluatorIntegrationTest extends TestCase {
 	@Test
 	public void testEvaluatingALambda() {
 		assertEval(5, "(funccall (lambda1 (x) (+ 1 x)) 4)");
+		assertEval(5, "(funccall (lambda1 (x y) (+ x y))  2 3)");
 	}
 	
 	@Test
@@ -127,8 +130,15 @@ public class EvaluatorIntegrationTest extends TestCase {
 	
 	@Test
 	public void testMacroFunccal() {
-		eval("(set mysetq (lambdam (x y) (set (quote x) y)))");
-		eval("(funccall mysetq yy 10)");
+		eval("(set (quote lb) (lambda1 (x y) (list (quote set) (list (quote quote) x) y)))");
+		
+		// let me just make sure macroexpansion is correct
+		Object one = eval("(quote (set (quote t) 10))");
+		Object two = eval("(funccall lb (quote t) (quote 10))");
+		assertEquals(one, two);
+		
+		eval("(setmacrofun (quote mysetq) lb)");
+		eval("(mysetq yy 10)");
 		assertEval(10, "(identity yy)");
 	}
 }
