@@ -147,9 +147,9 @@ public class Evaluator {
 		}
 		
 		// is this a user defined function in world?
-		if (world.functionMap.containsKey(function)) {
+		if (function.functionDefinition != null) {
 			List<Object> newArgs = new ArrayList<Object>();
-			newArgs.add(world.functionMap.get(function));
+			newArgs.add(function.functionDefinition);
 			newArgs.addAll(args);
 			return funccall(env, newArgs);
 		}

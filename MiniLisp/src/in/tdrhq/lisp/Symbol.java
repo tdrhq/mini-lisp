@@ -4,6 +4,7 @@ public class Symbol {
 	public static int globalId = 1;
 	public String stringValue;
 	public Lambda macroDefinition;
+	public Lambda functionDefinition;
 	
 	int id;
 	Object globalValue = null;

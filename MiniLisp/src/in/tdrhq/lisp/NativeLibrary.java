@@ -77,7 +77,7 @@ public class NativeLibrary {
 	}
 	
 	public Object setfun(Symbol a, Lambda b) {
-		world.functionMap.put(a, b);
+	    a.functionDefinition = b;
 		return b;
 	}
 	
@@ -142,5 +142,9 @@ public class NativeLibrary {
 	        return ((String) a).length();
 	    }
 	    throw new RuntimeException("unexpected object to length");
+	}
+	
+	public Lambda funcvalue(Symbol s) {
+	    return s.functionDefinition;
 	}
 }

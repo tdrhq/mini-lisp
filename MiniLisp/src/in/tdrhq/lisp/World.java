@@ -8,7 +8,6 @@ public class World implements Environment {
 	SymbolMap symbolMap = SymbolMap.singleton();
 	
 	HashMap<Symbol, Object> globalValueMap = new HashMap<Symbol, Object>();
-	HashMap<Symbol, Lambda> functionMap = new HashMap<Symbol, Lambda>();
 	HashMap<String, Symbol> internMap = new HashMap<String, Symbol> ();
 	
 	// special symbols
