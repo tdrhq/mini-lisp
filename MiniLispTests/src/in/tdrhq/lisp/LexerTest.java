@@ -38,4 +38,11 @@ public class LexerTest extends TestCase {
 		Lexer l = new Lexer("\"bar\\\"r\"");
 		assertEquals(new StringToken("bar\"r"), l.getNextToken());
 	}
+	
+	@Test
+	public void testCommentsAreExcluded() {
+	    Lexer l = new Lexer("; foo bar\n 20");
+	    assertEquals(new IntToken(20), l.getNextToken());
+	    assertEquals(null, l.getNextToken());
+	}
 }

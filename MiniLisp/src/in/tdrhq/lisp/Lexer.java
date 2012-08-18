@@ -77,6 +77,7 @@ public class Lexer {
 	
     String code;	
 	public Lexer(String code) {
+	    code = code.replaceAll("[;].*\n", "");
 		this.code = code;
 	}
 	
