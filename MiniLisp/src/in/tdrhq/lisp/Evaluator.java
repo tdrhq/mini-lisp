@@ -16,6 +16,7 @@ public class Evaluator {
 	public Evaluator(World world) {
 		this.world = world;
 		nativeLibrary = new NativeLibrary(world);
+		nativeLibrary.registerMethods();
 	}
 
 	public Object eval(Environment env, Object code) {
@@ -162,12 +163,7 @@ public class Evaluator {
 			newArgs.addAll(args);
 			return funccall(env, newArgs);
 		}
-				
-		if (nativeLibrary.isNativeMethod((String) function.stringValue)) {
-			return nativeLibrary.exec((String) function.stringValue, args.toArray());
-		}
-		
-		
+						
 		throw new RuntimeException(String.format("%s is not a function", function.stringValue));
 	}
 
@@ -189,6 +185,14 @@ public class Evaluator {
 	
 	public Object funccall(Environment parent, List<Object> args) {
 		Lambda l = (Lambda) args.get(0);
+		
+		if (l instanceof NativeLambda) {
+		    Object[] fargs = new Object[args.size() - 1];
+		    for (int i = 1; i < args.size(); i++) {
+		        fargs[i - 1] = args.get(i);
+		    }
+		    return ((NativeLambda) l).eval(fargs);
+		}
 		LambdaEnvironment env = new LambdaEnvironment(parent);
 		
 		System.out.printf("Funcalling with %s\n", args);
