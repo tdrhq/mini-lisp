@@ -147,4 +147,12 @@ public class NativeLibrary {
 	public Lambda funcvalue(Symbol s) {
 	    return s.functionDefinition;
 	}
+	
+	public Object not(Object o) {
+	    if (o == null) {
+	        return world.trueObject;
+	    } else {
+	        return null;
+	    }
+	}
 }

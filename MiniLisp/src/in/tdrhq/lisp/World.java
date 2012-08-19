@@ -6,7 +6,7 @@ import java.util.List;
 
 public class World implements Environment {
 	SymbolMap symbolMap = SymbolMap.singleton();
-	
+	public Object trueObject = new Object();
 	HashMap<Symbol, Object> globalValueMap = new HashMap<Symbol, Object>();
 	HashMap<String, Symbol> internMap = new HashMap<String, Symbol> ();
 	

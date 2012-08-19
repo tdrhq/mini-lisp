@@ -23,4 +23,16 @@
 (defun +1 (x)
   (+ 1 x))
 
+(defmacro setq (name value)
+  (backquote
+   (set (quote (comma name)) 
+        (comma value))))
+
+
+(defmacro if (test then &rest else)
+  (backquote
+   (if1 (comma test)
+        (comma then)
+        ;; else condition
+        (progn (comma-at else)))))
 

@@ -51,7 +51,12 @@ public class Evaluator {
 			if (res1 != null) {
 				return eval(env, code.get(2));
 			}
-			return null;
+			
+			if (code.size() > 3) {
+			    return eval(env, code.get(3));
+			} else {
+			    return null;
+			}
 		}
 		
 		// next internal macro is quote!
