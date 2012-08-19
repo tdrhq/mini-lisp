@@ -45,4 +45,10 @@ public class LexerTest extends TestCase {
 	    assertEquals(new IntToken(20), l.getNextToken());
 	    assertEquals(null, l.getNextToken());
 	}
+	@Test
+	public void testCommentsAreExcluded2() {
+	    Lexer l = new Lexer(";; foo bar\n 20");
+	    assertEquals(new IntToken(20), l.getNextToken());
+	    assertEquals(null, l.getNextToken());
+	}
 }

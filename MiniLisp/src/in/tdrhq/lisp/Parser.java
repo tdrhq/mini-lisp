@@ -35,7 +35,7 @@ public class Parser {
 			return null;
 		}
 		if (!(next instanceof LeftBracket)) {
-			throw new RuntimeException("Expected left bracket");
+			throw new RuntimeException(String.format("Expected left bracket, but found %s instead", next));
 		}
 		
 		return parseNext();
