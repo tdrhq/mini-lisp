@@ -122,18 +122,6 @@ public class Evaluator {
 			args.add(eval(env, arg));
 		}
 		
-		if (function == world.intern("identity")) {
-			return args.get(0);
-		}
-		
-		if (function == world.intern("progn")) {
-			return args.get(args.size() - 1);
-		}
-		
-		if (function == world.intern("eval")) {
-		    
-		}
-		
 
 		if (function == world.intern("funccall")) {
 			return funccall(env, args);

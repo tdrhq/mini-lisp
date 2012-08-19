@@ -128,4 +128,11 @@ public class NativeLibrary {
 	    }
 	    return Integer.valueOf(res);
 	}
+	
+	public Object identity(Object o) {
+	    return o;
+	}
+	public Object progn(Object[] res) {
+	    return res[res.length - 1];
+	}
 }
