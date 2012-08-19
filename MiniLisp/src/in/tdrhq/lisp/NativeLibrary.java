@@ -24,6 +24,12 @@ public class NativeLibrary {
 	        l.library = this;
 	        world.intern(m.getName()).functionDefinition = l;
 	    }
+	    registerAlias("+", "add");
+	}
+	
+	public void registerAlias(String alias, String real) {
+	    world.intern(alias).functionDefinition =
+	            world.intern(real).functionDefinition;
 	}
 	
 	
@@ -113,5 +119,13 @@ public class NativeLibrary {
 	    } else {
 	        return null;
 	    }
+	}
+	
+	public Object add(Object[] args) {
+	    int res = 0;
+	    for (Object o : args) {
+	        res += ((Integer) o);
+	    }
+	    return Integer.valueOf(res);
 	}
 }

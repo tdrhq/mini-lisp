@@ -122,11 +122,6 @@ public class Evaluator {
 			args.add(eval(env, arg));
 		}
 		
-		// now let's do the actual computation
-		if (function == world.intern("+")) {
-			return add(args);
-		}
-		
 		if (function == world.intern("identity")) {
 			return args.get(0);
 		}
