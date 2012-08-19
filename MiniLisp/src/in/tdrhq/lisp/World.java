@@ -22,6 +22,7 @@ public class World implements Environment {
 		// setup keywords and intern them
 		keywords.If = symbolMap.intern("if");
 		keywords.Set = symbolMap.intern("set");
+		new NativeLibrary(this).registerMethods();
 	}
 	
 	public List<Object> compileWithSymbols(List<Object> ast) {

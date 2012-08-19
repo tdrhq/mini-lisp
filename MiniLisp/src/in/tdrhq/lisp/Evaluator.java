@@ -11,12 +11,9 @@ import java.util.List;
 
 public class Evaluator {
 	World world;
-	NativeLibrary nativeLibrary;
 	
 	public Evaluator(World world) {
 		this.world = world;
-		nativeLibrary = new NativeLibrary(world);
-		nativeLibrary.registerMethods();
 	}
 
 	public Object eval(Environment env, Object code) {
