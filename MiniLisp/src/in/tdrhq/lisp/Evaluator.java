@@ -180,7 +180,7 @@ public class Evaluator {
 		for (int i = 0; i < l.parameterNames.length; i ++) {
 		    Symbol pn = l.parameterNames[i];
 		    Object value;
-		    if (pn == world.intern("&rest")) {
+		    if (pn == world.intern("&rest") || pn == world.intern("&body")) {
 		        // var args!
 		        i ++;
 		        pn = l.parameterNames[i];

@@ -5,14 +5,14 @@
 (message "defmacrodefined")
 
 
-(defmacro lambda (args &rest body)
+(defmacro lambda (args &body body)
   `(lambda1 ,args ,(cons 'progn body)))
 
 ;; Now that we have the actual interesting lambda method, let's
 ;; create defun.
 
 
-(defmacro defun (name args &rest body) 
+(defmacro defun (name args &body body) 
   `(setfun '(comma name)
            (lambda ,args ,@body)))
 
@@ -24,7 +24,7 @@
   (set (quote (comma name)) 
        (comma value))))
 
-(defmacro if (test then &rest else)
+(defmacro if (test then &body else)
   `(if1 ,test ,then
         ;; else condition
         (progn ,@else)))
@@ -42,7 +42,7 @@
 (defun second (list)
   (car (cdr list)))
 
-(defmacro let (assocs &rest body)
+(defmacro let (assocs &body body)
   `(funccall (lambda ,(mapcar #'car assocs)
      ,@body) ,@(mapcar #'second assocs)))
 

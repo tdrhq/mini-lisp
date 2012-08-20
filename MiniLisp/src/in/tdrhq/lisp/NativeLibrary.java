@@ -135,4 +135,21 @@ public class NativeLibrary {
 	public Object progn(Object[] res) {
 	    return res[res.length - 1];
 	}
+	
+	// technically, I can write this in 
+	// in lisp, but it's just more convinent to 
+	// do it from here
+	public Object replace_body_with_rest(Cons c) {
+	    if (c == null) { 
+	        return null;
+	    }
+	    Cons ret = new Cons();
+	    if (c.car == world.intern("&body")) {
+	        ret.car = world.intern("&rest");
+	    } else {
+	        ret.car = c.car;
+	    }
+	    ret.cdr = replace_body_with_rest((Cons) c.cdr);
+	    return ret;
+	}
 }
