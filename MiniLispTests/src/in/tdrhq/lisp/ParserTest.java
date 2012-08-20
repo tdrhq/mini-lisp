@@ -38,5 +38,10 @@ public class ParserTest extends TestCase {
 						
 	}
 	
+	@Test
+	public void testParsingSingleSymbol() {
+	    assertEquals(list(sym("foo")), compile("foo"));
+	    assertEquals(list("foo"), compile("\"foo\""));
+	}
 
 }

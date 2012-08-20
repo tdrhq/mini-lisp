@@ -29,17 +29,16 @@ public class Parser {
 	}
 	
 	// Parse one S-expression
-	public List<Object> parseOne() {
+	public Object parseOne() {
 		Token next = lexer.getNextToken();
 		if (next == null) {
 			return null;
 		}
-		if (!(next instanceof LeftBracket)) {
-			throw new RuntimeException(String.format("Expected left bracket, but found %s instead", next));
+		if (next instanceof LeftBracket) {
+            return parseNext();
+		} else {
+		    return parseToken(next);
 		}
-		
-		return parseNext();
-
 	}
 	
 	// parse one S-expression, after the leading ( is ommitted
@@ -59,18 +58,22 @@ public class Parser {
 				continue;
 			}
 			
-			// type of token:
-			if (next instanceof SymbolToken) {
-				ast.add(world.intern((String) ((SymbolToken) next).value));
-			} else if (next instanceof StringToken) {
-				ast.add(((StringToken) next).value);
-			} else if (next instanceof IntToken) {
-				ast.add(((IntToken) next).value);
-			} else if (next instanceof NilToken) {
-				ast.add(null);
-			} else {
-				throw new RuntimeException("unexpected token");
-			}
+			ast.add(parseToken(next));
 		}
 	}
+
+    private Object parseToken(Token next) {
+        // type of token:
+        if (next instanceof SymbolToken) {
+        	return world.intern((String) ((SymbolToken) next).value);
+        } else if (next instanceof StringToken) {
+        	return ((StringToken) next).value;
+        } else if (next instanceof IntToken) {
+        	return ((IntToken) next).value;
+        } else if (next instanceof NilToken) {
+        	return null;
+        } else {
+        	throw new RuntimeException("unexpected token");
+        }
+    }
 }
