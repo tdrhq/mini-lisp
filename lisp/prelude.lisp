@@ -39,6 +39,14 @@
 (mapcar (funcvalue (quote +1))
    (list 1 2 3))
 
+(defun second (list)
+  (car (cdr list)))
+
+(defmacro let (assocs &rest body)
+  `(funccall (lambda ,(mapcar #'car assocs)
+     ,@body) ,@(mapcar #'second assocs)))
+
+
   
 
 
