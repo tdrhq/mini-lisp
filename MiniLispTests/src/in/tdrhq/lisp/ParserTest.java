@@ -43,5 +43,12 @@ public class ParserTest extends TestCase {
 	    assertEquals(list(sym("foo")), compile("foo"));
 	    assertEquals(list("foo"), compile("\"foo\""));
 	}
+	
+	@Test
+	public void testSugar() {
+	    assertEquals(compile("(i (quote foo))"), compile("(i 'foo)"));
+	    assertEquals(compile("(i (backquote foo))"), compile("(i `foo)"));
+	    assertEquals(compile("(i (funcvalue (quote foo)))"), compile("(i #'foo)"));
+	}
 
 }

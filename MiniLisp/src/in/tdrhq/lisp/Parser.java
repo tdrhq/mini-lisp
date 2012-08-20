@@ -58,6 +58,30 @@ public class Parser {
 				continue;
 			}
 			
+			if (next instanceof SugarToken) {
+			    // whatever is next has to be parsed out and
+			    // quoted with a suitable function
+			    
+			    List<Object> quotedList = new ArrayList<Object>();
+			    Object toQuote = parseOne();
+			    if (next instanceof QuoteToken) {
+			        quotedList.add(world.intern("quote"));
+			        quotedList.add(toQuote);
+			    } else if (next instanceof BackquoteToken) {
+			        quotedList.add(world.intern("backquote"));
+			        quotedList.add(toQuote);
+			    } else {
+			        List<Object> innerList = new ArrayList<Object>();
+			        innerList.add(world.intern("quote"));
+			        innerList.add(toQuote);
+			        
+			        quotedList.add(world.intern("funcvalue"));
+			        quotedList.add(innerList);
+			    }
+			    ast.add(quotedList);
+			    continue;
+			}
+			
 			ast.add(parseToken(next));
 		}
 	}
