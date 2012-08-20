@@ -70,6 +70,12 @@ public class Parser {
 			    } else if (next instanceof BackquoteToken) {
 			        quotedList.add(world.intern("backquote"));
 			        quotedList.add(toQuote);
+			    } else if (next instanceof CommaToken) {
+			        quotedList.add(world.intern("comma"));
+			        quotedList.add(toQuote);
+			    } else if (next instanceof CommaAtToken) {
+			        quotedList.add(world.intern("comma-at"));
+			        quotedList.add(toQuote);
 			    } else {
 			        List<Object> innerList = new ArrayList<Object>();
 			        innerList.add(world.intern("quote"));

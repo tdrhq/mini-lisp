@@ -124,6 +124,16 @@ public class Lexer {
 		    return new FunQuoteToken();
 		}
 		
+		if (code.startsWith(",@")) {
+		    code = code.substring(2);
+		    return new CommaAtToken();
+		}
+		
+		if (code.startsWith(",")) {
+		    code = code.substring(1);
+		    return new CommaToken();
+		}
+		
 		// else read the next entire word till a space is reached
 		String name = "";
 		char lastChar = ' ';
