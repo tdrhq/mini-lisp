@@ -60,6 +60,15 @@ public class Lexer {
 		}
 	}
 	
+	// syntactic sugar:
+	public static class SugarToken extends Token {}
+	
+	public static class QuoteToken extends SugarToken {}
+	public static class FunQuoteToken extends SugarToken {}
+	public static class BackquoteToken extends SugarToken {}
+	public static class CommaToken extends SugarToken {}
+	public static class CommaAtToken extends SugarToken {}
+	
 	public static class StringToken extends StringValuedToken {
 
 		public StringToken(String value) {
@@ -99,6 +108,22 @@ public class Lexer {
 			return new RightBracket();
 		}
 
+		// check for syntactic sugar:
+		if (code.startsWith("'")) {
+		    code = code.substring(1);
+		    return new QuoteToken();
+		}
+		
+		if (code.startsWith("`")) {
+		    code = code.substring(1);
+		    return new BackquoteToken();
+		}
+		
+		if (code.startsWith("#'")) {
+		    code = code.substring(2);
+		    return new FunQuoteToken();
+		}
+		
 		// else read the next entire word till a space is reached
 		String name = "";
 		char lastChar = ' ';

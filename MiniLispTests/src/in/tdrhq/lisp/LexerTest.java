@@ -51,4 +51,16 @@ public class LexerTest extends TestCase {
 	    assertEquals(new IntToken(20), l.getNextToken());
 	    assertEquals(null, l.getNextToken());
 	}
+	
+	@Test
+	public void testSyntacticSugars() {
+	    Lexer l = new Lexer("#'foo 'foo `foo");
+	    assertEquals(new FunQuoteToken(), l.getNextToken());
+        assertEquals(new SymbolToken("foo"), l.getNextToken());
+        assertEquals(new QuoteToken(), l.getNextToken());
+        assertEquals(new SymbolToken("foo"), l.getNextToken());
+        assertEquals(new BackquoteToken(), l.getNextToken());
+        assertEquals(new SymbolToken("foo"), l.getNextToken());
+        assertEquals(null, l.getNextToken());
+	}
 }
