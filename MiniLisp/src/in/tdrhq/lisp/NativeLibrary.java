@@ -185,4 +185,43 @@ public class NativeLibrary {
 	public Object error(Symbol type, Object[] message) {
 	    throw new LispError(type, "");
 	}
+
+	/* reflection api */
+	public Class find_class(String klass) {
+	    try {
+            return Class.forName(klass);
+        } catch (ClassNotFoundException e) {
+            throw new LispError(world.intern("class-not-found"), "");
+        }
+	}
+	
+	public Method find_method(Class klass, String name, Object[] types) {
+	    Class[] copy = new Class[types.length];
+	    for (int i = 0; i < copy.length; i++) {
+	        copy[i] = (Class) types[i];
+	    }
+	    try {
+            return klass.getMethod(name, copy);
+        } catch (SecurityException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchMethodException e) {
+            throw new LispError(world.intern("no-such-method"), "");
+        }
+	}
+	
+	public Object invoke_method(Method m, Object on, Object[] args) {
+	    try {
+            return m.invoke(on, args);
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            if (e.getTargetException() instanceof RuntimeException) {
+                throw (RuntimeException) e.getTargetException();
+            }
+            throw new RuntimeException(e.getTargetException());
+        }
+	}
+
 }
