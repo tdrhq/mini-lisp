@@ -81,9 +81,10 @@ public class World implements Environment {
         Lexer lexer = new Lexer(s);
         Parser parser = new Parser(this, lexer);
         Object res = null;
-        for (Object o : parser.parse()) {
-            System.out.printf("parsed as %s\n", o);
-            res = new Evaluator(this).eval(this, o);
+        Object next = null;
+        while ((next = parser.parseOne()) != null) {
+            System.out.printf("parsed as %s\n", next);
+            res = new Evaluator(this).eval(this, next);
         }    
         return res;
 	}
