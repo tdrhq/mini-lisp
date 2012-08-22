@@ -66,23 +66,23 @@ public class Parser {
 			    List<Object> quotedList = new ArrayList<Object>();
 			    Object toQuote = parseOne();
 			    if (next instanceof QuoteToken) {
-			        quotedList.add(world.intern("quote"));
+			        quotedList.add(intern("quote"));
 			        quotedList.add(toQuote);
 			    } else if (next instanceof BackquoteToken) {
-			        quotedList.add(world.intern("backquote"));
+			        quotedList.add(intern("backquote"));
 			        quotedList.add(toQuote);
 			    } else if (next instanceof CommaToken) {
-			        quotedList.add(world.intern("comma"));
+			        quotedList.add(intern("comma"));
 			        quotedList.add(toQuote);
 			    } else if (next instanceof CommaAtToken) {
-			        quotedList.add(world.intern("comma-at"));
+			        quotedList.add(intern("comma-at"));
 			        quotedList.add(toQuote);
 			    } else {
 			        List<Object> innerList = new ArrayList<Object>();
-			        innerList.add(world.intern("quote"));
+			        innerList.add(intern("quote"));
 			        innerList.add(toQuote);
 			        
-			        quotedList.add(world.intern("funcvalue"));
+			        quotedList.add(intern("funcvalue"));
 			        quotedList.add(innerList);
 			    }
 			    ast.add(quotedList);
@@ -96,7 +96,7 @@ public class Parser {
     private Object parseToken(Token next) {
         // type of token:
         if (next instanceof SymbolToken) {
-        	return world.intern((String) ((SymbolToken) next).value);
+        	return intern((String) ((SymbolToken) next).value);
         } else if (next instanceof StringToken) {
         	return ((StringToken) next).value;
         } else if (next instanceof IntToken) {
@@ -106,5 +106,15 @@ public class Parser {
         } else {
         	throw new RuntimeException("unexpected token");
         }
+    }
+    
+    // a package aware interner
+    public Symbol intern(String symbol) {
+        String pkg = (String) world.getSymbolValue(world.intern("*package*"));
+
+        if (pkg != null && !symbol.contains(":")) {
+            symbol = pkg + "::" + symbol;
+        }
+        return world.intern(symbol);
     }
 }
