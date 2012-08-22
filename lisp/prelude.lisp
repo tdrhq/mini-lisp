@@ -1,3 +1,4 @@
+
 (setmacrofun (quote defmacro) (lambda1 (name args &rest body)
                                 (backquote
                                  (setmacrofun (quote (comma name)) (lambda1 (comma args) (comma (cons (quote progn)  body)))))))
@@ -24,6 +25,8 @@
   (set (quote (comma name)) 
        (comma value))))
 
+(setq t 't)
+
 (defmacro if (test then &body else)
   `(if1 ,test ,then
         ;; else condition
@@ -46,8 +49,11 @@
   `(funccall (lambda ,(mapcar #'car assocs)
      ,@body) ,@(mapcar #'second assocs)))
 
-  
+(defun not (val)
+  (if val nil t))
 
+          
+          
 
 
 

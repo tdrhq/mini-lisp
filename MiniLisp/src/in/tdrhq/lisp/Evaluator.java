@@ -17,7 +17,7 @@ public class Evaluator {
 	}
 
 	public Object eval(Environment env, Object code) {
-		System.out.printf("Evaluating %s\n", code);
+		//System.out.printf("Evaluating %s\n", code);
 		if (code instanceof Cons) {
 			code = ((Cons) code).toList();
 		}
@@ -42,7 +42,7 @@ public class Evaluator {
 
 		Symbol function = (Symbol) code.get(0);
 		
-		if (function == world.intern("if1")) {
+		if (function == world.keywords.IF1) {
 			// this is the only case that doesn't evaluate
 			// bot sides
 			Object res1 = eval(env, code.get(1));
@@ -58,17 +58,17 @@ public class Evaluator {
 		}
 		
 		// next internal macro is quote!
-		if (function == world.intern("quote")) {
+		if (function == world.keywords.QUOTE) {
 			Object sym = code.get(1);
 			return quote(sym);
 		}
 		
-		if (function == world.intern("backquote")) {
+		if (function == world.keywords.BACKQUOTE) {
 		    return uncommafy(env, quote(code.get(1)));
 		}
 				
 		// and then here comes lambda
-		if (function == world.intern("lambda1")) { 
+		if (function == world.keywords.LAMBDA1) { 
 			Lambda lambda;
 			lambda = new Lambda();
 			Object ast = code.get(2);
@@ -89,11 +89,11 @@ public class Evaluator {
 			return lambda;
 		}
 
-		if (function == world.intern("try1")) {
+		if (function == world.keywords.TRY1) {
 		    try {
 		        return eval(env, code.get(1));
 		    } catch (Exception e) {
-		        world.setSymbolValue(world.intern("*last-error*"), e);
+		        world.setSymbolValue(world.keywords.LAST_ERROR, e);
 		        return null;
 		    }
 		}
@@ -116,7 +116,7 @@ public class Evaluator {
 			Object result = funccall(env, newargs);
 			
 			// and now that we have the code ready... 
-			System.out.printf("Macroexpansion: %s\n", result);
+			//System.out.printf("Macroexpansion: %s\n", result);
 			return eval(env, result);
 		}
 		
@@ -132,15 +132,15 @@ public class Evaluator {
 		}
 		
 
-		if (function == world.intern("funccall")) {
+		if (function == world.keywords.FUNCCALL) {
 			return funccall(env, args);
 		}
 		
-		if (function == world.intern("apply")) {
+		if (function == world.keywords.APPLY) {
 		    return apply(env, (Lambda) args.get(0), (Cons) args.get(1));
 		}
 		
-		if (function == world.intern("set")) {
+		if (function == world.keywords.SET) {
 			env.setSymbolValue((Symbol) args.get(0), args.get(1));
 			return args.get(1);
 		}
@@ -184,17 +184,17 @@ public class Evaluator {
 		}
 		LambdaEnvironment env = new LambdaEnvironment(parent);
 		
-		System.out.printf("Funcalling with %s\n", args);
+		//System.out.printf("Funcalling with %s\n", args);
 		
 		for (int i = 0; i < l.parameterNames.length; i ++) {
 		    Symbol pn = l.parameterNames[i];
 		    Object value;
-		    if (pn == world.intern("&rest") || pn == world.intern("&body")) {
+		    if (pn == world.keywords.AMP_REST || pn == world.keywords.AMP_BODY) {
 		        // var args!
 		        i ++;
 		        pn = l.parameterNames[i];
 		        value = Cons.fromList(args, i);
-		        System.out.printf("final vararg is %s (%s : %d)\n", value, args, i);
+		        //System.out.printf("final vararg is %s (%s : %d)\n", value, args, i);
 		        env.setSymbolValueInEnvironment(pn, value);		        
 		        break;
 		    } else {
@@ -216,7 +216,7 @@ public class Evaluator {
 	}
 	
 	public Object quote(Object o) {
-		System.out.printf("quoting %s\n", o);
+	//	System.out.printf("quoting %s\n", o);
 		if (o instanceof List) {
 			return quoteList((List<Object>) o, 0);
 		} else {
@@ -241,9 +241,9 @@ public class Evaluator {
 	public Object uncommafy(Environment env, Object o) {
 	    if (o instanceof Cons) {
 	        Cons a = (Cons) o;
-	        if (a.car == world.intern("comma")) {
+	        if (a.car == world.keywords.COMMA) {
 	           return eval(env, ((Cons) a.cdr).car);
-	        } else if (a.car == world.intern("comma-at")) {
+	        } else if (a.car == world.keywords.COMMA_AT) {
 	            CommaAt ret = new CommaAt();
 	            ret.cons = (Cons) eval(env, ((Cons) a.cdr).car);
 	            return ret;

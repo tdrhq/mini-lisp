@@ -8,23 +8,50 @@ import java.util.Map;
 public class World implements Environment {
 	SymbolMap symbolMap = SymbolMap.singleton();
 	public Object trueObject = new Object();
-	HashMap<Symbol, Object> globalValueMap = new HashMap<Symbol, Object>();
 	Map<String, Symbol> internMap = new HashMap<String, Symbol> ();
 	Map<String, Package> packageMap = new HashMap<String, Package> ();
 		
 	// special symbols
 	public static class Keywords { 
-		int If;
-		int Set;
+		Symbol IF1;
+		Symbol SET;
+		Symbol QUOTE;
+		Symbol COMMA;
+		Symbol COMMA_AT;
+		Symbol LAMBDA1;
+		Symbol TRY1;
+		Symbol LAST_ERROR;
+		Symbol PACKAGE;
+		Symbol FUNCCALL;
+		Symbol APPLY;
+		Symbol BACKQUOTE;
+		Symbol AMP_REST;
+		Symbol AMP_BODY;
 	}
 	
 	public Keywords keywords = new Keywords();
 	
 	public World() {
 		// setup keywords and intern them
-		keywords.If = symbolMap.intern("if");
-		keywords.Set = symbolMap.intern("set");
 		new NativeLibrary(this).registerMethods();
+		setupKeywords();
+	}
+	
+	public void setupKeywords() {
+	    keywords.IF1 = cl_intern("if1");
+	    keywords.SET = cl_intern("set");
+	    keywords.QUOTE = cl_intern("quote");
+	    keywords.COMMA = cl_intern("comma");
+	    keywords.COMMA_AT = cl_intern("comma-at");
+	    keywords.LAMBDA1 = cl_intern("lambda1");
+	    keywords.TRY1 = cl_intern("try1");
+	    keywords.PACKAGE = cl_intern("*package*");
+	    keywords.LAST_ERROR = cl_intern("*last-error*");
+	    keywords.FUNCCALL = cl_intern("funccall");
+	    keywords.APPLY = cl_intern("apply");
+	    keywords.BACKQUOTE = cl_intern("backquote");
+	    keywords.AMP_BODY = cl_intern("&body");
+	    keywords.AMP_REST = cl_intern("&rest");
 	}
 	
 	public List<Object> compileWithSymbols(List<Object> ast) {
@@ -46,11 +73,11 @@ public class World implements Environment {
 	}
 	
 	public Object getSymbolValue(Symbol s) {
-		return globalValueMap.get(s);
+		return s.globalValue;
 	}
 	
 	public void setSymbolValue(Symbol s, Object value) {
-		globalValueMap.put(s, value);
+		s.globalValue = value;
 	}
 	
 	public Symbol intern(String name) {
@@ -87,5 +114,13 @@ public class World implements Environment {
             res = new Evaluator(this).eval(this, next);
         }    
         return res;
+	}
+	
+	public Symbol cl_intern(String name) {
+	    String exportedName = "cl:" + name;
+	    Symbol ret = intern(exportedName);
+	    importSymbol("cl::" + name, ret);
+	    importSymbol(name, ret);
+	    return ret;
 	}
 }

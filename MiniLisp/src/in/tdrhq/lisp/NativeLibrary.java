@@ -5,7 +5,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.naming.spi.DirectoryManager;
 
@@ -18,12 +20,12 @@ public class NativeLibrary {
 
 	
 	public void registerMethods() {
-	    Method[] methods = getClass().getMethods();
+	    Method[] methods = getClass().getDeclaredMethods();
 	    for (Method m : methods) {
 	        NativeLambda l = new NativeLambda();
 	        l.method = m;
 	        l.library = this;
-	        world.intern(m.getName()).functionDefinition = l;
+	        world.cl_intern(m.getName()).functionDefinition = l;
 	    }
 	    registerAlias("+", "add");
 	}
@@ -102,6 +104,9 @@ public class NativeLibrary {
 	}
 	
 	public Integer length(Object a) {
+	    if (a == null) {
+	        return 0;
+	    }
 	    if (a instanceof Cons) {
 	        return ((Cons) a).toList().size();
 	    } else if (a instanceof String) {
@@ -134,6 +139,9 @@ public class NativeLibrary {
 	    return o;
 	}
 	public Object progn(Object[] res) {
+	    if (res.length == 0) {
+	        return null;
+	    }
 	    return res[res.length - 1];
 	}
 	
@@ -209,22 +217,32 @@ public class NativeLibrary {
         }
 	}
 	
-	public Method find_only_method(Class klass, String name) {
+	public Method find_only_method(Class klass, String name, Integer count) {
 	   Method ret = null;
 	   for (Method m : klass.getMethods()) {
-	       if (m.getName().equals(name)) {
+	       if (m.getName().equals(name) && m.getParameterTypes().length == count.intValue()) {
 	           if (ret != null) {
 	               throw new RuntimeException("multiple methods with same name");
 	           }
 	           ret = m;
 	       }
 	   }
+	   if (ret == null) {
+	       throw new RuntimeException("method with description not found");
+	   }
 	   return ret;
 	}
 	
+	
 	public Object invoke_method(Method m, Object on, Cons args) {
 	    try {
-            return m.invoke(on, Cons.toList(args).toArray());
+            Object ret = m.invoke(on, Cons.toList(args).toArray());
+            if (Boolean.TRUE.equals(ret)) {
+                return world.getSymbolValue("t");
+            } else if (Boolean.FALSE.equals(ret)) {
+                return null;
+            }
+            return ret;
         } catch (IllegalArgumentException e) {
             throw new RuntimeException(e);
         } catch (IllegalAccessException e) {
@@ -247,5 +265,19 @@ public class NativeLibrary {
 	    } else {
 	        return null;
 	    }
+	}
+	
+	// list of all the interned symbols!
+	public Cons all_symbols() {
+	    Cons ret = null;
+	    Set<Symbol> temp = new HashSet<Symbol>();
+	    temp.addAll(world.internMap.values());
+	    for (Symbol s : temp) {
+	        Cons n = new Cons();
+	        n.car = s;
+	        n.cdr = ret;
+	        ret = n;
+	    }
+	    return ret;
 	}
 }

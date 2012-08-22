@@ -17,4 +17,8 @@ public class Symbol {
 	public String toString() {
 		return String.valueOf(stringValue);
 	}
+	
+	public String toStringWithoutNs() {
+	    return String.valueOf(stringValue).replaceFirst(".*::?", "");
+	}
 }

@@ -19,7 +19,8 @@ public class Repl {
         world.evalText("(load \"../lisp/prelude.lisp\")");
         world.evalText("(load \"../lisp/types.lisp\")");
         world.evalText("(load \"../lisp/reflect.lisp\")");
-		
+        world.evalText("(load \"../lisp/package.lisp\")");
+
 		while (true) {
 			String s;
 			try {
