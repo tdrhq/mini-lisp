@@ -31,8 +31,8 @@ public class NativeLibrary {
 	}
 	
 	public void registerAlias(String alias, String real) {
-	    world.intern(alias).functionDefinition =
-	            world.intern(real).functionDefinition;
+	    world.cl_intern(alias).functionDefinition =
+	            world.cl_intern(real).functionDefinition;
 	}
 	
 	
@@ -279,5 +279,9 @@ public class NativeLibrary {
 	        ret = n;
 	    }
 	    return ret;
+	}
+	
+	public void quit() {
+	    System.exit(0);
 	}
 }

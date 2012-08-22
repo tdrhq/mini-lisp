@@ -25,7 +25,7 @@ public class ParserTest extends TestCase {
 	}
 	
 	public Object sym(String s) {
-		return world.intern(s);
+		return world.intern("cl::" + s);
 	}
 	@Test
 	public void testSimpleParsing() {

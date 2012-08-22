@@ -16,11 +16,10 @@
 (defun package::import-symbol-if-req (good-prefix bad-prefix symbol)
   (let ((sym-str (reflect:j symbol 'toString)))
     (message (package::concat ">>>>>" sym-str))
-    (if package::starts-with sym-str bad-prefix
-        nil
+    (if (not (package::starts-with sym-str bad-prefix))
         (if (package::starts-with sym-str good-prefix)
+            (message (package::concat "Copying" sym-str))
             (let ((end-name (package::substring sym-str (package::str-length good-prefix))))
-              (message (package::concat "Copying" sym-str))
               (copy_symbol (package::concat (package::concat *package* ":") end-name) symbol)
               (copy_symbol (package::concat (package::concat *package* "::") end-name) symbol))
             ))))

@@ -46,6 +46,7 @@ public class World implements Environment {
 	    keywords.LAMBDA1 = cl_intern("lambda1");
 	    keywords.TRY1 = cl_intern("try1");
 	    keywords.PACKAGE = cl_intern("*package*");
+	    keywords.PACKAGE.globalValue = "cl";
 	    keywords.LAST_ERROR = cl_intern("*last-error*");
 	    keywords.FUNCCALL = cl_intern("funccall");
 	    keywords.APPLY = cl_intern("apply");
@@ -118,6 +119,9 @@ public class World implements Environment {
 	
 	public Symbol cl_intern(String name) {
 	    String exportedName = "cl:" + name;
+	    if (internMap.containsKey(exportedName)) {
+	        return intern(exportedName);
+	    }
 	    Symbol ret = intern(exportedName);
 	    importSymbol("cl::" + name, ret);
 	    importSymbol(name, ret);

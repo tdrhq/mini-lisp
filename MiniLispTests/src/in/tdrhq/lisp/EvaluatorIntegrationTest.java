@@ -75,7 +75,7 @@ public class EvaluatorIntegrationTest extends TestCase {
 	@Test
 	public void testSettingGlobalValues() {
 		assertEval(5, "(set (quote foo) 5)");
-		assertEquals(5, world.getSymbolValue("foo"));
+	    assertEquals(5, world.getSymbolValue("cl::foo"));
 		assertEval(5, "(identity 5)");
 		assertEval(5, "(identity foo)");
 		assertEval(6, "(set (quote bar) 6)");
@@ -107,18 +107,18 @@ public class EvaluatorIntegrationTest extends TestCase {
 	@Test
 	public void testQuotingForLists() {
 		Cons a = (Cons) eval("(quote (foo bar))");
-		assertEquals(world.intern("foo"), a.getIndex(0));
-		assertEquals(world.intern("bar"), a.getIndex(1));
+		assertEquals(world.intern("cl::foo"), a.getIndex(0));
+		assertEquals(world.intern("cl::bar"), a.getIndex(1));
 		
 		Cons c =(Cons) eval("(quote (foo bar (bar)))");
-		assertEquals(world.intern("foo"), c.getIndex(0));
-		assertEquals(world.intern("bar"), c.getIndex(1));
-		assertEquals(world.intern("bar"), ((Cons)c.getIndex(2)).getIndex(0));
+		assertEquals(world.intern("cl::foo"), c.getIndex(0));
+		assertEquals(world.intern("cl::bar"), c.getIndex(1));
+		assertEquals(world.intern("cl::bar"), ((Cons)c.getIndex(2)).getIndex(0));
 	}
 
 	@Test
 	public void testQuotingWithConstants() {
-		assertEval(Cons.build(world.intern("foo"), 5),
+		assertEval(Cons.build(world.intern("cl::foo"), 5),
 				"(quote (foo 5))");
 	}
 	
