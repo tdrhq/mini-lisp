@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 
 import javax.naming.spi.DirectoryManager;
 
@@ -137,7 +138,7 @@ public class NativeLibrary {
 	}
 	
 	// technically, I can write this in 
-	// in lisp, but it's just more convinent to 
+	// in lisp, but it's just more convenient to 
 	// do it from here
 	public Object replace_body_with_rest(Cons c) {
 	    if (c == null) { 
@@ -151,5 +152,37 @@ public class NativeLibrary {
 	    }
 	    ret.cdr = replace_body_with_rest((Cons) c.cdr);
 	    return ret;
+	}
+	
+	public void copy_symbol(String to, Symbol from) {
+	    world.importSymbol(to, from);
+	}
+	
+	public void create_package(String packageName) {
+	    world.packageMap.put(packageName, new Package(packageName));
+	}
+	
+	public void set_exports(String packageName, Cons exports) {
+	    world.packageMap.get(packageName).setExports(exports.toList().toArray(new Symbol[exports.toList().size()]));
+	}
+	
+	public Symbol intern(String name) {
+	    return world.intern(name);
+	}
+	
+	public Cons package_get_exports(String packageName) {
+	    return null;
+	}
+	
+	public boolean streql(String a, String b) {
+	    return a.equals(b);
+	}
+	
+	public boolean eq(Object a, Object b) {
+	    return a == b;
+	}
+
+	public Object error(Symbol type, Object[] message) {
+	    throw new LispError(type, "");
 	}
 }

@@ -88,6 +88,15 @@ public class Evaluator {
 			lambda.parameterNames = args1;
 			return lambda;
 		}
+
+		if (function == world.intern("try1")) {
+		    try {
+		        return eval(env, code.get(1));
+		    } catch (Exception e) {
+		        world.setSymbolValue(world.intern("*last-error*"), e);
+		        return null;
+		    }
+		}
 				
 		
 		if (function.macroDefinition != null) {

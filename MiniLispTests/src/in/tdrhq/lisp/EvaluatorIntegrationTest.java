@@ -167,5 +167,13 @@ public class EvaluatorIntegrationTest extends TestCase {
         assertEval(eval("(quote (foo 2 3))"),
                     "(backquote (foo (comma-at (list 2 3))))");
     }
+    
+    @Test
+    public void testTryCatch() {
+        assertEval(5, "(try1 5)");
+        assertNull(eval("(try1 (error foo))"));
+        Object o = eval("*last-error*");
+        assertTrue(String.format("%s should be instance of LispError", o), o instanceof LispError);
+    }
 	
 }

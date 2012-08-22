@@ -3,13 +3,15 @@ package in.tdrhq.lisp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class World implements Environment {
 	SymbolMap symbolMap = SymbolMap.singleton();
 	public Object trueObject = new Object();
 	HashMap<Symbol, Object> globalValueMap = new HashMap<Symbol, Object>();
-	HashMap<String, Symbol> internMap = new HashMap<String, Symbol> ();
-	
+	Map<String, Symbol> internMap = new HashMap<String, Symbol> ();
+	Map<String, Package> packageMap = new HashMap<String, Package> ();
+		
 	// special symbols
 	public static class Keywords { 
 		int If;
@@ -58,6 +60,16 @@ public class World implements Environment {
 			internMap.put(name, new Symbol(name));
 			return internMap.get(name);
 		}
+	}
+	
+	// make two identifiers map to the same symbol.
+	// the original identifier takes precedence when
+	// converting the symbol to string
+	public void importSymbol(String to, Symbol from) {
+	    if (internMap.containsKey(to)) {
+	        throw new RuntimeException(to + " is already present");
+	    }
+	    internMap.put(to, from);
 	}
 
 	@Override

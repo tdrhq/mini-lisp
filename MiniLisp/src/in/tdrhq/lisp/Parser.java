@@ -8,6 +8,7 @@ import java.util.List;
 public class Parser {
 	Lexer lexer;
 	World world;
+	String inPackage = "";
 	
 	public Parser(World world, Lexer lexer) {
 		this.world = world;

@@ -46,7 +46,6 @@
   `(funccall (lambda ,(mapcar #'car assocs)
      ,@body) ,@(mapcar #'second assocs)))
 
-
   
 
 
