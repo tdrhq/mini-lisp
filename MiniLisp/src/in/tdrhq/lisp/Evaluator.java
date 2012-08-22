@@ -195,10 +195,12 @@ public class Evaluator {
 		        pn = l.parameterNames[i];
 		        value = Cons.fromList(args, i);
 		        System.out.printf("final vararg is %s (%s : %d)\n", value, args, i);
+		        env.setSymbolValueInEnvironment(pn, value);		        
+		        break;
 		    } else {
 		        value = args.get(i + 1);
+                env.setSymbolValueInEnvironment(pn, value);
 		    }
-			env.setSymbolValueInEnvironment(pn, value);
 		}
 		
 		// how do you actually evaluate the lambda now? just evaluate
@@ -265,6 +267,9 @@ public class Evaluator {
                 if (inner instanceof CommaAt) {
                     ret = ((CommaAt) inner).cons;
                     Cons last = ret;
+                    if (last == null) {
+                        return uncommafy_inner(env, a.cdr);
+                    }
                     while (last.cdr != null) {
                         last = (Cons) last.cdr;
                     }

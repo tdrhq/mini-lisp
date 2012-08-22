@@ -17,6 +17,13 @@ public class Cons {
 		}
 	}
 	
+	public static List toList(Cons cons) {
+	    if (cons == null) {
+	        return new ArrayList();
+	    } else {
+	        return cons.toList();
+	    }
+	}
 	public static Cons build(Object... objects) {
 		return fromList(new ArrayList<Object>(Arrays.asList(objects)));
 	}

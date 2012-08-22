@@ -2,12 +2,14 @@ package in.tdrhq.lisp;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 public class NativeLambda extends Lambda {
     Object library;
     Method method;
     
     public Object eval(Object[] args) {
+        System.out.printf("Calling native method %s on %s with args %s\n", method, library, Arrays.toString(args));
         try {             
             // is name a varargs function?
             Class<?> [] types = method.getParameterTypes();

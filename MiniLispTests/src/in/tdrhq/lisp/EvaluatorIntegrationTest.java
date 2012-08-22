@@ -126,6 +126,7 @@ public class EvaluatorIntegrationTest extends TestCase {
 	public void testListAndThereforeVarargNatives() {
 		assertEval(Cons.build(5, 2),
 				"(list (+ 2 3) 2)");
+		assertNull(eval("(list)"));
 	}
 	
 	@Test
@@ -145,7 +146,8 @@ public class EvaluatorIntegrationTest extends TestCase {
     @Test
     public void testVarArgs() {
         eval("(set (quote foo) (lambda1 (x &rest args) (identity args)))");
-        assertEval(eval("(quote (2 1 0))"), "(funccall foo 3 2 1 0)"); 
+        assertEval(eval("(quote (2 1 0))"), "(funccall foo 3 2 1 0)");
+        assertEval(null, "(funccall foo 3)");
     }
     
     @Test

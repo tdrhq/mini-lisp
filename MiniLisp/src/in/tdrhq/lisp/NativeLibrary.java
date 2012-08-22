@@ -209,9 +209,22 @@ public class NativeLibrary {
         }
 	}
 	
-	public Object invoke_method(Method m, Object on, Object[] args) {
+	public Method find_only_method(Class klass, String name) {
+	   Method ret = null;
+	   for (Method m : klass.getMethods()) {
+	       if (m.getName().equals(name)) {
+	           if (ret != null) {
+	               throw new RuntimeException("multiple methods with same name");
+	           }
+	           ret = m;
+	       }
+	   }
+	   return ret;
+	}
+	
+	public Object invoke_method(Method m, Object on, Cons args) {
 	    try {
-            return m.invoke(on, args);
+            return m.invoke(on, Cons.toList(args).toArray());
         } catch (IllegalArgumentException e) {
             throw new RuntimeException(e);
         } catch (IllegalAccessException e) {
@@ -224,4 +237,15 @@ public class NativeLibrary {
         }
 	}
 
+	public Class class_of(Object o) {
+	    return o.getClass();
+	}
+	
+	public Object instance_of(Class klass, Object o) {
+	    if (klass.isInstance(o)) {
+	        return "dfd"; //True
+	    } else {
+	        return null;
+	    }
+	}
 }
