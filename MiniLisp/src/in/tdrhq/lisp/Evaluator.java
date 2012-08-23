@@ -17,7 +17,6 @@ public class Evaluator {
 	}
 
 	public Object eval(Environment env, Object code) {
-		//System.out.printf("Evaluating %s\n", code);
 		if (code instanceof Cons) {
 			code = ((Cons) code).toList();
 		}
@@ -34,10 +33,12 @@ public class Evaluator {
 			return env.getSymbolValue((Symbol) code);
 		}
 		
-		return null;
+		return code;
 	}
 	
 	public Object evalList(Environment env, List<Object> code) {
+	    System.out.printf("Evaluating %s\n", code);
+
 		ArrayList<Object> args = new ArrayList<Object>();
 
 		Symbol function = (Symbol) code.get(0);
@@ -137,7 +138,11 @@ public class Evaluator {
 		}
 		
 		if (function == world.keywords.APPLY) {
-		    return apply(env, (Lambda) args.get(0), (Cons) args.get(1));
+		    Cons last = (Cons) args.get(args.size() - 1);
+		    for (int i = args.size() - 2; i >= 1; i--) {
+		        last = cons(args.get(i), last);		        
+		    }
+		    return apply(env, (Lambda) args.get(0), last);
 		}
 		
 		if (function == world.keywords.SET) {
@@ -289,5 +294,12 @@ public class Evaluator {
         } else {
             return o;
         }
+	}
+	
+	public Cons cons(Object a, Object b) {
+	    Cons c = new Cons();
+	    c.car = a;
+	    c.cdr = b;
+	    return c;
 	}
 }

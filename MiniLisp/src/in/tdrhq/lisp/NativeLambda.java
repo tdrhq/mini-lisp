@@ -9,7 +9,7 @@ public class NativeLambda extends Lambda {
     Method method;
     
     public Object eval(Object[] args) {
-        //System.out.printf("Calling native method %s on %s with args %s\n", method, library, Arrays.toString(args));
+        System.out.printf("Calling native method %s on %s with args %s\n", method, library, Arrays.toString(args));
         try {             
             // is name a varargs function?
             Class<?> [] types = method.getParameterTypes();

@@ -196,6 +196,18 @@ public class NativeLibrary {
 
 	/* reflection api */
 	public Class find_class(String klass) {
+	    if (klass.equals("int")) {
+	        return int.class;
+	    }
+	    
+	    if (klass.equals("long")) {
+	        return long.class;
+	    }
+	    
+	    if (klass.equals("float")) {
+	        return float.class;
+	    }
+	    
 	    try {
             return Class.forName(klass);
         } catch (ClassNotFoundException e) {

@@ -33,8 +33,7 @@
         (progn ,@else)))
 
 (defun mapcar (func list)
-  (if (not list)
-      nil
+  (if list
       (cons
        (funccall func (car list))
        (mapcar func (cdr list)))))
@@ -43,7 +42,8 @@
    (list 1 2 3))
 
 (defun second (list)
-  (car (cdr list)))
+  (if (cdr list)
+      (car (cdr list))))
 
 (defmacro let (assocs &body body)
   `(funccall (lambda ,(mapcar #'car assocs)

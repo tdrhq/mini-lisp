@@ -14,3 +14,17 @@
 (defun reflect:j (object method &rest fargs)
   (reflect::j-fun object method fargs))
 
+
+(defun reflect::find-method (class-name name &rest type-names) 
+  (let ((types (mapcar #'find_class type-names))
+        (klass (find_class class-name)))
+      (apply #'find_method klass name types)))
+
+
+(defmacro reflect::defalias (alias-name class-name name &rest type-names)
+  (let ((method (apply #'reflect::find-method class-name name type-names)))
+    `(defun ,alias-name (object &rest args)
+       (invoke_method ,method object args))))
+
+(reflect::defalias reflect::length "java.lang.String" "length")
+(reflect::defalias reflect::substring "java.lang.String" "substring" "int" "int")
