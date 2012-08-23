@@ -52,6 +52,12 @@
 (defun not (val)
   (if val nil t))
 
+;; A package and path aware loader
+
+(setq *path* nil)
+
+
+
           
           
 

@@ -37,3 +37,8 @@
 
 
 (copy_symbol "package:import-package" 'package::import-package)
+
+;; within packages we have a lot of interesting things we can do
+
+(defun package:in-package (name)
+  (setq cl:*package* name))
