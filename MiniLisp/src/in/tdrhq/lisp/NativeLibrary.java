@@ -64,7 +64,7 @@ public class NativeLibrary {
 	public String pwd() {
 	    return System.getProperty("user.dir");
 	}
-	private static String readFileAsString(String filePath) {
+	public static String readFileAsString(String filePath) {
 	    try {
 	        StringBuffer fileData = new StringBuffer(1000);
 	        BufferedReader reader = new BufferedReader(

@@ -21,6 +21,10 @@ public class Repl {
         world.evalText("(load \"lisp/reflect.lisp\")");
         world.evalText("(load \"lisp/package.lisp\")");
 
+        if (args.length == 1) {
+            world.evalText(NativeLibrary.readFileAsString(args[0]));
+        }
+        
 		while (true) {
 			String s;
 			try {
