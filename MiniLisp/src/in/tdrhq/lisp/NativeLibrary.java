@@ -1,5 +1,7 @@
 package in.tdrhq.lisp;
 
+import org.apache.commons.lang3.reflect.MethodUtils;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -245,7 +247,21 @@ public class NativeLibrary {
 	   return ret;
 	}
 	
-	
+    public Object send_method(Object o, String methodName, Object[] args) {
+	try {
+	    return MethodUtils.invokeMethod(o, methodName, args); 
+	} catch (NoSuchMethodException e) {
+	    throw new RuntimeException(e);
+	} catch (InvocationTargetException e) {
+	    if (e.getTargetException() instanceof RuntimeException) {
+		throw (RuntimeException) e.getTargetException();
+	    }
+
+	    throw new RuntimeException(e);
+	} catch (IllegalAccessException e) {
+	    throw new RuntimeException(e);
+	}
+    }
 	public Object invoke_method(Method m, Object on, Cons args) {
 	    try {
             Object ret = m.invoke(on, Cons.toList(args).toArray());
