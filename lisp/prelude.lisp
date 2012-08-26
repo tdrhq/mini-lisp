@@ -54,7 +54,7 @@
 
 ;; A package and path aware loader
 
-(setq *path* nil)
+
 
 
 

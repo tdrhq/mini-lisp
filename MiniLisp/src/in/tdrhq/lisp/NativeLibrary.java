@@ -248,19 +248,35 @@ public class NativeLibrary {
 	}
 	
     public Object send_method(Object o, String methodName, Object[] args) {
-	try {
-	    return MethodUtils.invokeMethod(o, methodName, args); 
-	} catch (NoSuchMethodException e) {
-	    throw new RuntimeException(e);
-	} catch (InvocationTargetException e) {
-	    if (e.getTargetException() instanceof RuntimeException) {
-		throw (RuntimeException) e.getTargetException();
-	    }
-
-	    throw new RuntimeException(e);
-	} catch (IllegalAccessException e) {
-	    throw new RuntimeException(e);
-	}
+        try {
+            return MethodUtils.invokeMethod(o, methodName, args); 
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            if (e.getTargetException() instanceof RuntimeException) {
+                throw (RuntimeException) e.getTargetException();
+            }
+            
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    public Object send_static_method(Class klass, String methodName, Object[] args) {
+        try {
+            return MethodUtils.invokeStaticMethod(klass, methodName, args); 
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            if (e.getTargetException() instanceof RuntimeException) {
+                throw (RuntimeException) e.getTargetException();
+            }
+            
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }      
     }
 	public Object invoke_method(Method m, Object on, Cons args) {
 	    try {
