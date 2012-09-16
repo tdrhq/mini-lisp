@@ -13,6 +13,4 @@ public class Lambda {
 	public List<Object> getAst() {
 		return ast;
 	}
-	
-
 }

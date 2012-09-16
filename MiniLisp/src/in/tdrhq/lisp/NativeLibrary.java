@@ -60,7 +60,7 @@ public class NativeLibrary {
 	}
 	
 	public Object load(String filename) {
-	    return world.evalText(readFileAsString(filename));
+	    return world.evalText(readFileAsString(filename), filename);
 	}
 	
 	public String pwd() {

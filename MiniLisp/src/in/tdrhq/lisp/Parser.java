@@ -32,14 +32,20 @@ public class Parser {
 	// Parse one S-expression
 	public Object parseOne() {
 		Token next = lexer.getNextToken();
+		Object ret = null;
 		if (next == null) {
 			return null;
 		}
 		if (next instanceof LeftBracket) {
-            return parseNext();
+            ret = parseNext();
 		} else {
-		    return parseToken(next);
+		    ret = parseToken(next);
 		}
+		
+		// let's store the debugging metadata
+		
+		world.sexpMetadatas.put(ret, new SexpMetadata(next.fileName, next.lineNumber));
+		return ret;
 	}
 	
 	// parse one S-expression, after the leading ( is ommitted

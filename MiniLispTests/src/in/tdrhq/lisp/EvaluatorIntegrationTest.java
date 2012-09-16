@@ -177,5 +177,27 @@ public class EvaluatorIntegrationTest extends TestCase {
         Object o = eval("*last-error*");
         assertTrue(String.format("%s should be instance of LispError", o), o instanceof LispError);
     }
+    
+    @Test
+    public void testBasicExceptions() {
+        eval("(load \"../lisp/prelude.lisp\")");
+        eval("(load \"../lisp/java-tests/basic.lisp\")");
+        
+        try {
+            eval("(java-tests:fn3 2)");
+        } catch (LispError e) {
+            // expected
+            assertNotNull(e.stack);
+            
+            // now let's also assert the stack is what we expect it to be
+            // Each element in the stack must be a lambda, remember?b
+            System.out.println("" + e.stack);
+            assertEquals(3, e.stack.size());
+            assertSame(world.intern("java-tests:fn3").functionDefinition, e.stack.get(0));
+            assertSame(world.intern("java-tests:fn2").functionDefinition, e.stack.get(1));
+            assertSame(world.intern("java-tests:fn1").functionDefinition, e.stack.get(2));
+        }
+        
+    }
 	
 }

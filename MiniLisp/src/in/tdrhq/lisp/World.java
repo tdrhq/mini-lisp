@@ -2,15 +2,19 @@ package in.tdrhq.lisp;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
+import java.util.WeakHashMap;
 
 public class World implements Environment {
 	SymbolMap symbolMap = SymbolMap.singleton();
 	public Object trueObject = new Object();
 	Map<String, Symbol> internMap = new HashMap<String, Symbol> ();
 	Map<String, Package> packageMap = new HashMap<String, Package> ();
-		
+	Map<Object, SexpMetadata> sexpMetadatas = new WeakHashMap<Object, SexpMetadata>();	
+	
 	// special symbols
 	public static class Keywords { 
 		Symbol IF1;
@@ -105,8 +109,8 @@ public class World implements Environment {
 		return null;
 	}
 	
-	public Object evalText(String s) {
-        Lexer lexer = new Lexer(s);
+	public Object evalText(String s, String fileName) {
+        Lexer lexer = new Lexer(s, fileName);
         Parser parser = new Parser(this, lexer);
         Object res = null;
         Object next = null;
@@ -115,6 +119,10 @@ public class World implements Environment {
             res = new Evaluator(this).eval(this, next);
         }    
         return res;
+	}
+
+	public Object evalText(String s) {
+	    return evalText(s, "unknown");
 	}
 	
 	public Symbol cl_intern(String name) {

@@ -8,37 +8,45 @@ import in.tdrhq.lisp.Lexer.Token;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class Evaluator {
 	World world;
+	Stack<Object> stack = new Stack<Object>();
 	
 	public Evaluator(World world) {
 		this.world = world;
 	}
 
 	public Object eval(Environment env, Object code) {
-		if (code instanceof Cons) {
-			code = ((Cons) code).toList();
-		}
-		
-		if (code instanceof List) {
-			return evalList(env, (List<Object>)code);
-		} else if (code instanceof Integer) {
-			return (Integer) code;
-		} else if (code instanceof NilToken) {
-			return null;
-		} else if (code instanceof String) {
-			return code;
-		} else if (code instanceof Symbol) {
-			return env.getSymbolValue((Symbol) code);
-		}
-		
-		return code;
+	    try {
+	        if (code instanceof Cons) {
+	            code = ((Cons) code).toList();
+	        }
+	        
+	        if (code instanceof List) {
+	            return evalList(env, (List<Object>)code);
+	        } else if (code instanceof Integer) {
+	            return (Integer) code;
+	        } else if (code instanceof NilToken) {
+	            return null;
+	        } else if (code instanceof String) {
+	            return code;
+	        } else if (code instanceof Symbol) {
+	            return env.getSymbolValue((Symbol) code);
+	        }
+	        
+	        return code;
+	    } catch (LispError e) {
+	        if (e.stack == null) {
+	            // let's fill up the stack
+	            e.stack = new ArrayList<Object>(stack);
+	        }
+	        throw e;
+	    }
 	}
-	
+	    
 	public Object evalList(Environment env, List<Object> code) {
-	    System.out.printf("Evaluating %s\n", code);
-
 		ArrayList<Object> args = new ArrayList<Object>();
 
 		Symbol function = (Symbol) code.get(0);
@@ -178,6 +186,14 @@ public class Evaluator {
 	}
 	
 	public Object funccall(Environment parent, List<Object> args) {
+	    stack.push(args.get(0));
+	    try {
+	        return funccallWithoutStack(parent, args);
+	    } finally {
+	        stack.pop();
+	    }
+	}
+	public Object funccallWithoutStack(Environment parent, List<Object> args) {
 		Lambda l = (Lambda) args.get(0);
 		
 		if (l instanceof NativeLambda) {

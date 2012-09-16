@@ -7,10 +7,14 @@ import org.apache.commons.lang3.StringEscapeUtils;
 
 
 public class Lexer {
+    String fileName = "unknown";
+    int currentLineNumber = 1;
 	public static abstract class Token {
 		public boolean equals(Object other) {
 			return this.getClass() == other.getClass();
 		}
+		String fileName;
+		int lineNumber;
 	}
 
 	public static abstract class ValueToken extends Token {
@@ -85,12 +89,39 @@ public class Lexer {
 	
 	
     String code;	
-	public Lexer(String code) {
+	public Lexer(String code, String fileName) {
 	    code = code.replaceAll("[;].*\n", "");
 		this.code = code;
+		this.fileName = fileName;
+	}
+	
+	public Lexer(String code) {
+	    this(code, "unknown");
 	}
 	
 	public Token getNextToken() {
+	    Token ret = getNextTokenWithoutMetadata();
+	    if (ret != null) {
+	        ret.fileName = fileName;
+	        ret.lineNumber = currentLineNumber;
+	    }
+	    return ret;
+	}
+	
+	public String trimCode(String code) {
+	    for (int i = 0; i < code.length(); i++) {
+	        char thisChar = code.charAt(i);
+	        if (thisChar == '\n') {
+	            currentLineNumber ++;
+	        }
+	        if (!Character.isWhitespace(thisChar)) {
+	            return code.substring(i);
+	        }
+	    }
+	    return "";
+	}
+	
+	public Token getNextTokenWithoutMetadata() {
 		// todo: fucking optimize this
 		// remove whitespace:
 		code = code.trim();
