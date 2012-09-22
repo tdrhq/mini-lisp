@@ -135,4 +135,26 @@ public class World implements Environment {
 	    importSymbol(name, ret);
 	    return ret;
 	}
+	
+	public String formatLambda(Lambda lambda) {
+	    // first off, is there a symbol that maps to this lambda?
+	    // let's pull out the first one that does!
+	    
+	    for (Symbol symbol : internMap.values()) {
+	        if (symbol.functionDefinition == lambda) {
+	            return symbol.toString();
+	        }
+	    }
+	    return lambda.toString();
+	}
+	
+	public String formatLispError(LispError e) {
+	    String result = e.getMessage() + "\n";
+	    
+	    for (Object lambda : e.stack) {
+	        result += "   in " + formatLambda((Lambda) lambda) + "\n"; 
+	    }
+	    return result;
+	}
 }
+	

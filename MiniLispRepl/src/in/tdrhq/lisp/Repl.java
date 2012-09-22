@@ -35,7 +35,10 @@ public class Repl {
 
 			try {
 			    System.out.printf("=> %s\n", world.evalText(s));
-			} catch (Exception ee) {
+			} catch (LispError e1) {
+			    System.out.println("LispError thrown:\n");
+                System.out.println(world.formatLispError(e1));
+            } catch (Exception ee) {
 			    ee.printStackTrace();
 			}
 		}

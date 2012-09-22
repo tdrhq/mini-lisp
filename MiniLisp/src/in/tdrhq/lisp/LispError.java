@@ -25,8 +25,4 @@ public class LispError extends RuntimeException {
     public LispError(Symbol type) {
         this(type, type.toString());
     }
-    
-    public void printLisptrace() {
-        
-    }
 }
