@@ -1,0 +1,3 @@
+
+(setq *foobar* 1)
+

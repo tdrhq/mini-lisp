@@ -23,6 +23,7 @@ public class Repl {
 
         if (args.length == 1) {
             world.evalText(NativeLibrary.readFileAsString(args[0]));
+	    return;
         }
         
 		while (true) {
