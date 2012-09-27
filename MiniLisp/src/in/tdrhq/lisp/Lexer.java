@@ -2,6 +2,8 @@ package in.tdrhq.lisp;
 
 import java.io.StringReader;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
@@ -15,6 +17,25 @@ public class Lexer {
 		}
 		String fileName;
 		int lineNumber;
+	}
+	
+	int offset = 0;
+		
+	String matchNext(String pattern) {
+	    Pattern p = Pattern.compile(pattern);
+	    Matcher matcher = p.matcher(code);
+	    if (matcher.find(offset) && matcher.start() == offset) {
+	        String ret = matcher.group();
+         //   System.out.println("Matched '" + ret + "' for " + pattern + " and code " + code + " offset " + offset);
+	        offset += ret.length();
+	        return ret;
+	    }
+	    return null;
+	}
+	
+	void fixOffset() {
+	    code = code.substring(offset);
+	    offset = 0;
 	}
 
 	public static abstract class ValueToken extends Token {
@@ -124,47 +145,57 @@ public class Lexer {
 	public Token getNextTokenWithoutMetadata() {
 		// todo: fucking optimize this
 		// remove whitespace:
-		code = code.trim();
-		if (code.length() == 0) {
-			return null;
+
+	//    System.out.println("finding next for " + code + ":" + offset);
+		matchNext("\\s*");
+		if (code.length() == offset) {
+		    return null;
 		}
 		
-		if (code.charAt(0) == '(') {
-			code = code.substring(1);
+		String val;
+		
+		if (matchNext("\\(") != null) {
 			return new LeftBracket();
 		} 
 		
-		if (code.charAt(0) == ')') {
-			code = code.substring(1);
+
+		
+		if (matchNext("\\)") != null) {
 			return new RightBracket();
 		}
-
+		
+        fixOffset();
+        if (code.length() == offset) {
+            return null;
+        }
 		// check for syntactic sugar:
-		if (code.startsWith("'")) {
-		    code = code.substring(1);
+		if (matchNext("[']") != null) {
 		    return new QuoteToken();
 		}
 		
-		if (code.startsWith("`")) {
-		    code = code.substring(1);
+		if (matchNext("[`]") != null) {
 		    return new BackquoteToken();
 		}
 		
-		if (code.startsWith("#'")) {
-		    code = code.substring(2);
+		if (matchNext("#[']") != null) {
 		    return new FunQuoteToken();
 		}
 		
-		if (code.startsWith(",@")) {
-		    code = code.substring(2);
+		if (matchNext("[,][@]") != null) {
 		    return new CommaAtToken();
 		}
 		
-		if (code.startsWith(",")) {
-		    code = code.substring(1);
+		if (matchNext(",") != null) {
 		    return new CommaToken();
 		}
 		
+		// match for a full string!
+		String strRegex = "\"([^\"\\\\]|(\\\\.))*\"";
+		String token = "";
+		if ((token = matchNext(strRegex)) != null) {
+		    token = token.substring(1, token.length() - 1);
+		    return new StringToken(StringEscapeUtils.unescapeEcmaScript(token));
+		}
 		// else read the next entire word till a space is reached
 		String name = "";
 		char lastChar = ' ';

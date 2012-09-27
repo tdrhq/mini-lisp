@@ -42,6 +42,7 @@ public class ParserTest extends TestCase {
 	public void testParsingSingleSymbol() {
 	    assertEquals(list(sym("foo")), compile("foo"));
 	    assertEquals(list("foo"), compile("\"foo\""));
+	    assertEquals(list("foo bar"), compile("\"foo bar\""));
 	}
 	
 	@Test

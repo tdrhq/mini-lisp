@@ -63,4 +63,12 @@ public class LexerTest extends TestCase {
         assertEquals(new SymbolToken("foo"), l.getNextToken());
         assertEquals(null, l.getNextToken());
 	}
+	
+	
+	@Test
+	public void testStringsWithSpaces() {
+	    Lexer l = new Lexer("\"foo bar\"");
+	    assertEquals(new StringToken("foo bar"), l.getNextToken());
+	}
+	
 }
