@@ -3,8 +3,6 @@
                                 (backquote
                                  (setmacrofun (quote (comma name)) (lambda1 (comma args) (comma (cons (quote progn)  body)))))))
 
-(message "defmacrodefined")
-
 
 (defmacro lambda (args &body body)
   `(lambda1 ,args ,(cons 'progn body)))
