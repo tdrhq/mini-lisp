@@ -164,10 +164,7 @@ public class Lexer {
 			return new RightBracket();
 		}
 		
-        fixOffset();
-        if (code.length() == offset) {
-            return null;
-        }
+
 		// check for syntactic sugar:
 		if (matchNext("[']") != null) {
 		    return new QuoteToken();
@@ -196,6 +193,12 @@ public class Lexer {
 		    token = token.substring(1, token.length() - 1);
 		    return new StringToken(StringEscapeUtils.unescapeEcmaScript(token));
 		}
+		
+        fixOffset();
+        if (code.length() == offset) {
+            return null;
+        }
+        
 		// else read the next entire word till a space is reached
 		String name = "";
 		char lastChar = ' ';

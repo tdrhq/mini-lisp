@@ -18,7 +18,7 @@ public class PreludeTest extends TestCase {
         
         world = new World();
         e = new Evaluator(world);
-        world.evalText("(load \"../lisp/prelude.lisp\")");
+        world.evalText("(load \"lisp/prelude.lisp\")");
     }
     
 

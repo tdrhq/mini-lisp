@@ -11,7 +11,7 @@ public class LoadingIntegrationTests extends TestCase {
 
     @Test
     public void test() {
-        File dir = new File("../lisp/integration-tests");
+        File dir = new File("lisp/integration-tests");
         File[] fileList = dir.listFiles();
         
         for (File f : fileList) {
@@ -20,12 +20,17 @@ public class LoadingIntegrationTests extends TestCase {
             }
                 
             World world = new World();
-            world.evalText("(load \"../lisp/prelude.lisp\")");
-            world.evalText("(load \"../lisp/types.lisp\")");
-            world.evalText("(load \"../lisp/reflect.lisp\")");
-            world.evalText("(load \"../lisp/package.lisp\")");
+            world.evalText("(load \"lisp/prelude.lisp\")");
+            world.evalText("(load \"lisp/types.lisp\")");
+            world.evalText("(load \"lisp/reflect.lisp\")");
+            world.evalText("(load \"lisp/package.lisp\")");
             
-            world.evalText(NativeLibrary.readFileAsString(f.getAbsolutePath()), f.getAbsolutePath());
+            try {
+                world.evalText(NativeLibrary.readFileAsString(f.getAbsolutePath()), f.getAbsolutePath());
+            } catch (LispError e) {
+                System.out.println(world.formatLispError(e));
+                throw e;
+            }
         }
             
     }

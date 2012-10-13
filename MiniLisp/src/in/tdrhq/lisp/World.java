@@ -115,7 +115,7 @@ public class World implements Environment {
         Object res = null;
         Object next = null;
         while ((next = parser.parseOne()) != null) {
-            System.out.printf("parsed as %s\n", next);
+            //            System.out.printf("parsed as %s\n", next);
             res = new Evaluator(this).eval(this, next);
         }    
         return res;

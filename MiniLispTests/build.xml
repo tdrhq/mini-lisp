@@ -49,16 +49,17 @@
     <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
     <target name="MiniLispTests">
         <mkdir dir="${junit.output.dir}"/>
-        <junit fork="yes" printsummary="withOutAndErr">
-            <formatter type="xml"/>
-            <test name="in.tdrhq.lisp.EvaluatorIntegrationTest" todir="${junit.output.dir}"/>
-            <test name="in.tdrhq.lisp.EvaluatorTest" todir="${junit.output.dir}"/>
-            <test name="in.tdrhq.lisp.LexerTest" todir="${junit.output.dir}"/>
-            <test name="in.tdrhq.lisp.ParserTest" todir="${junit.output.dir}"/>
-            <test name="in.tdrhq.lisp.PreludeTest" todir="${junit.output.dir}"/>
-            <test name="in.tdrhq.lisp.SymbolMapTest" todir="${junit.output.dir}"/>
-            <classpath refid="MiniLispTests.classpath"/>
+        <junit failureProperty="test.failure">
+          <classpath refid="MiniLispTests.classpath"/>
+          <formatter type="brief" usefile="false"/>
+          <batchtest>
+            <fileset dir="bin">
+              <include name="**/*Test.class" />
+              <include name="**/*Tests.class" />
+            </fileset>
+          </batchtest>
         </junit>
+        <fail message="test failed" if="test.failure" />
     </target>
     <target name="in.tdrhq.lisp">
         <mkdir dir="${junit.output.dir}"/>

@@ -14,7 +14,7 @@ public class EvaluatorIntegrationTest extends TestCase {
 	World world;
 	Evaluator e;
 
-	@Before
+    @Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		
@@ -27,8 +27,6 @@ public class EvaluatorIntegrationTest extends TestCase {
 		Parser p = new Parser(world, l);
 		
 		List<Object> ast = p.parse();
-		System.out.printf("AST: %s\n", ast);
-		
 		Object ret = null;
 		// the top level AST node is a list of S-expressions
 		// that cannot be executed on its own.
@@ -180,8 +178,8 @@ public class EvaluatorIntegrationTest extends TestCase {
     
     @Test
     public void testBasicExceptions() {
-        eval("(load \"../lisp/prelude.lisp\")");
-        eval("(load \"../lisp/java-tests/basic.lisp\")");
+        eval("(load \"lisp/prelude.lisp\")");
+        eval("(load \"lisp/java-tests/basic.lisp\")");
         
         try {
             eval("(java-tests:fn3 2)");
